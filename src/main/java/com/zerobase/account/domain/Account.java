@@ -32,8 +32,8 @@ public class Account {
 
     private Long balance;
 
-    private LocalDateTime registeredAt;
-    private LocalDateTime unRegisteredAt;
+    private LocalDateTime registeredAt; // 계좌 등록 일시
+    private LocalDateTime unRegisteredAt; // 계좌 해지 일시
 
     @CreatedDate
     private LocalDateTime createdAt;

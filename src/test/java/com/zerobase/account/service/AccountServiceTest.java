@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -266,6 +267,50 @@ class AccountServiceTest {
         assertEquals(ErrorCode.BALANCE_NOT_EMPTY, exception.getErrorCode());
     }
 
+    @Test
+    @DisplayName("계좌 조회")
+    void successGetAccountsByUserId() {
+        // given
+        AccountUser accountUser = getAccountUser();
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.of(accountUser));
+
+        given(accountRepository.findByAccountUser(accountUser))
+                .willReturn(getAccounts(accountUser));
+
+        // when
+        List<AccountDto> accountDtos = accountService.getAccountsByUserId(1L);
+
+        // then
+        assertEquals(3, accountDtos.size());
+    }
+
+    @Test
+    @DisplayName("해당 유저 없음 - 계좌 조회 실패")
+    void failedToGetAccounts() {
+        // given
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.empty());
+
+        // when
+        AccountException exception = assertThrows(AccountException.class,
+                () -> accountService.getAccountsByUserId(1L));
+
+        // then
+        assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    private static List<Account> getAccounts(AccountUser accountUser) {
+        return List.of(
+                Account.builder().accountUser(accountUser).balance(10L)
+                        .accountNumber("1000000000").build(),
+                Account.builder().accountUser(accountUser).balance(100L)
+                        .accountNumber("1000000001").build(),
+                Account.builder().accountUser(accountUser).balance(1000L)
+                        .accountNumber("1000000002").build()
+        );
+    }
+
     private static AccountUser getAccountUser() {
         return AccountUser.builder()
                 .id(1L)
@@ -288,7 +333,7 @@ class AccountServiceTest {
         ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
 
         // when
-        Account account = accountService.getAccount(455L); // anyLong 이기때문에 아무 숫자나 넣어도 된다.
+        Account account = accountRepository.findById(455L).get(); // anyLong 이기때문에 아무 숫자나 넣어도 된다.
 
         // then
         // 의존하고 있는 mock이 해당 동작을 수행했는지 검증
