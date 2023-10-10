@@ -24,7 +24,7 @@ public class Account {
     @ManyToOne
     private AccountUser accountUser;
 
-    // 자유도를 위해 타입을 문자열로 함 (0이 앞에 올 수도 있고, - 가 들어갈 수도 있기 때문)
+    // 자유도를 위해 타입을 문자열로 함. (0이 앞에 올 수도 있고, - 가 들어갈 수도 있기 때문)
     private String accountNumber;
 
     @Enumerated(EnumType.STRING)
@@ -40,4 +40,9 @@ public class Account {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void changeAccountForDelete() {
+        this.accountStatus = AccountStatus.UNREGISTERED;
+        this.unRegisteredAt = LocalDateTime.now();
+    }
 }
