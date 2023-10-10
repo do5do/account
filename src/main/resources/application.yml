@@ -1,0 +1,24 @@
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+  jpa:
+    # 데이터 초기 값 입력을 뒤로 미루는 설정 (resources > data.sql의 데이터를 테이블 생성 이후 자동 입력 가능)
+    defer-datasource-initialization: true
+    database-platform: H2
+    hibernate:
+      ddl-auto: create-drop # 운영에서는 절대 사용 금지!
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
