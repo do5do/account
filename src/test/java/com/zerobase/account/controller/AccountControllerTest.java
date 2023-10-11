@@ -1,15 +1,11 @@
 package com.zerobase.account.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zerobase.account.domain.Account;
 import com.zerobase.account.dto.AccountDto;
 import com.zerobase.account.dto.CreateAccount;
 import com.zerobase.account.dto.DeleteAccount;
-import com.zerobase.account.type.AccountStatus;
 import com.zerobase.account.service.AccountService;
 import com.zerobase.account.service.RedisTestService;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

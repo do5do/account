@@ -1,6 +1,8 @@
 package com.zerobase.account.domain;
 
+import com.zerobase.account.exception.AccountException;
 import com.zerobase.account.type.AccountStatus;
+import com.zerobase.account.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Account {
+public class Account { // 계좌
     @Id
     @GeneratedValue
     private Long id;
@@ -44,5 +46,12 @@ public class Account {
     public void changeAccountForDelete() {
         this.accountStatus = AccountStatus.UNREGISTERED;
         this.unRegisteredAt = LocalDateTime.now();
+    }
+
+    public void useBalance(Long amount) {
+        if (amount > balance) {
+            throw new AccountException(ErrorCode.AMOUNT_EXCEED_BALANCE);
+        }
+        balance -= amount;
     }
 }

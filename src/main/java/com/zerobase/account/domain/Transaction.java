@@ -1,9 +1,8 @@
 package com.zerobase.account.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.zerobase.account.type.TransactionResultType;
+import com.zerobase.account.type.TransactionType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,12 +19,27 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class AccountUser { // 사용자
+public class Transaction { // 거래
     @Id
     @GeneratedValue
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionResultType transactionResultType;
+
+    @ManyToOne
+    private Account account;
+
+    private Long amount; // 거래 금액
+
+    private Long balanceSnapshot; // 거래 후 계좌 잔액
+
+    private String transactionId;
+
+    private LocalDateTime transactedAt; // 거래 일시
 
     @CreatedDate
     private LocalDateTime createdAt;
