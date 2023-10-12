@@ -319,7 +319,7 @@ class AccountServiceTest {
     }
 
     @Test
-    @DisplayName("테스트 에시")
+    @DisplayName("테스트 예시")
     void testMockito() {
         // given
         given(accountRepository.findById(anyLong()))

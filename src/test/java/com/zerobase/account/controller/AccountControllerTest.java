@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.account.dto.AccountDto;
 import com.zerobase.account.dto.CreateAccount;
 import com.zerobase.account.dto.DeleteAccount;
+import com.zerobase.account.exception.AccountException;
 import com.zerobase.account.service.AccountService;
 import com.zerobase.account.service.RedisTestService;
+import com.zerobase.account.type.ErrorCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -103,6 +105,19 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$[1].balance").value(100L))
                 .andExpect(jsonPath("$[2].accountNumber").value("1000001123"))
                 .andExpect(jsonPath("$[2].balance").value(1000L));
+    }
+
+    @Test
+    void failGetAccount() throws Exception {
+        // given
+        given(accountService.getAccountsByUserId(anyLong()))
+                .willThrow(new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+        // when
+        // then
+        mockMvc.perform(get("/account?user_id=1"))
+                .andDo(print())
+                .andExpect(jsonPath("$.errorCode").value("ACCOUNT_NOT_FOUND"))
+                .andExpect(jsonPath("$.errorMessage").value("계좌가 없습니다."));
     }
 
     private static List<AccountDto> getAccountDtos() {

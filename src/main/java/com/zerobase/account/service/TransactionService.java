@@ -9,6 +9,7 @@ import com.zerobase.account.repository.AccountRepository;
 import com.zerobase.account.repository.AccountUserRepository;
 import com.zerobase.account.repository.TransactionRepository;
 import com.zerobase.account.type.TransactionResultType;
+import com.zerobase.account.type.TransactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import static com.zerobase.account.type.AccountStatus.IN_USE;
 import static com.zerobase.account.type.ErrorCode.*;
 import static com.zerobase.account.type.TransactionResultType.F;
 import static com.zerobase.account.type.TransactionResultType.S;
+import static com.zerobase.account.type.TransactionType.CANCEL;
 import static com.zerobase.account.type.TransactionType.USE;
 
 @Slf4j
@@ -45,7 +47,7 @@ public class TransactionService {
 
         account.useBalance(amount);
 
-        return TransactionDto.from(saveAndGetTransaction(S, amount, account));
+        return TransactionDto.fromEntity(saveAndGetTransaction(USE, S, amount, account));
     }
 
     private void validUseBalance(AccountUser accountUser, Account account, Long amount) {
@@ -67,13 +69,15 @@ public class TransactionService {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
 
-        saveAndGetTransaction(F, amount, account);
+        saveAndGetTransaction(USE, F, amount, account);
     }
 
-    private Transaction saveAndGetTransaction(TransactionResultType transactionResultType,
-                                              Long amount, Account account) {
+    private Transaction saveAndGetTransaction(TransactionType transactionType,
+                                              TransactionResultType transactionResultType,
+                                              Long amount,
+                                              Account account) {
         return transactionRepository.save(Transaction.builder()
-                .transactionType(USE)
+                .transactionType(transactionType)
                 .transactionResultType(transactionResultType)
                 .account(account)
                 .amount(amount)
@@ -82,5 +86,48 @@ public class TransactionService {
                 .transactionId(UUID.randomUUID().toString().replace("-", ""))
                 .transactedAt(LocalDateTime.now())
                 .build());
+    }
+
+    @Transactional
+    public TransactionDto cancelBalance(String transactionId, String accountNumber, Long amount) {
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND));
+
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+
+        validateCancelBalance(transaction, account, amount);
+
+        account.cancelBalance(amount);
+
+        return TransactionDto.fromEntity(saveAndGetTransaction(CANCEL, S, amount, account));
+    }
+
+    private void validateCancelBalance(Transaction transaction, Account account, Long amount) {
+        if (!Objects.equals(transaction.getAccount().getId(), account.getId())) {
+            throw new AccountException(TRANSACTION_ACCOUNT_UN_MATCH);
+        }
+
+        if (!Objects.equals(transaction.getAmount(), amount)) { // 거래 금액과 거래 취소 금액이 다른 경우
+            throw new AccountException(CANCEL_MUST_FULLY);
+        }
+
+        if (transaction.getTransactedAt().isBefore(LocalDateTime.now().minusYears(1))) {
+            throw new AccountException(TOO_OLD_ORDER_TO_CANCEL);
+        }
+    }
+
+    @Transactional
+    public void saveFailedCancelTransaction(String accountNumber, Long amount) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+
+        saveAndGetTransaction(CANCEL, F, amount, account);
+    }
+
+    public TransactionDto queryTransaction(String transactionId) {
+        return TransactionDto.fromEntity(
+                transactionRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND)));
     }
 }

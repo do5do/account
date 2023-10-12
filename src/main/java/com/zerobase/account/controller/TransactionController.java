@@ -1,15 +1,14 @@
 package com.zerobase.account.controller;
 
-import com.zerobase.account.dto.TransactionDto;
+import com.zerobase.account.dto.CancelBalance;
+import com.zerobase.account.dto.QueryTransactionResponse;
 import com.zerobase.account.dto.UseBalance;
 import com.zerobase.account.exception.AccountException;
 import com.zerobase.account.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 잔액 관련 컨트롤러
@@ -40,5 +39,29 @@ public class TransactionController {
 
             throw e; // 다시 exception을 밖으로 던져줌
         }
+    }
+
+    @PostMapping("/transaction/cancel")
+    public CancelBalance.Response cancelBalance(@RequestBody @Valid CancelBalance.Request request) {
+        try {
+            return CancelBalance.Response
+                    .from(transactionService.cancelBalance(request.getTransactionId(),
+                            request.getAccountNumber(),
+                            request.getAmount()));
+        } catch (AccountException e) {
+            log.error("Failed to use balance. msg = {}", e.getMessage());
+
+            // 실패 상황 저장
+            transactionService.saveFailedCancelTransaction(
+                    request.getAccountNumber(),
+                    request.getAmount());
+
+            throw e;
+        }
+    }
+
+    @GetMapping("/transaction/{transactionId}")
+    public QueryTransactionResponse queryTransaction(@PathVariable String transactionId) {
+        return QueryTransactionResponse.from(transactionService.queryTransaction(transactionId));
     }
 }
