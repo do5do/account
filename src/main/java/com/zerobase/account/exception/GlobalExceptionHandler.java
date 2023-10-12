@@ -1,14 +1,14 @@
 package com.zerobase.account.exception;
 
 import com.zerobase.account.dto.ErrorResponse;
-import com.zerobase.account.type.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static com.zerobase.account.type.ErrorCode.*;
+import static com.zerobase.account.type.ErrorCode.INTERNAL_SERVER_ERROR;
+import static com.zerobase.account.type.ErrorCode.INVALID_REQUEST;
 
 @Slf4j
 @RestControllerAdvice

@@ -1,7 +1,6 @@
 package com.zerobase.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zerobase.account.dto.AccountDto;
 import com.zerobase.account.dto.CancelBalance;
 import com.zerobase.account.dto.TransactionDto;
 import com.zerobase.account.dto.UseBalance;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
