@@ -1,5 +1,6 @@
 package com.zerobase.account.dto;
 
+import com.zerobase.account.aop.AccountLockIdInterface;
 import com.zerobase.account.type.TransactionResultType;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ public class CancelBalance {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Request {
+    public static class Request implements AccountLockIdInterface {
         @NotBlank
         private String transactionId;
 

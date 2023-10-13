@@ -1,5 +1,6 @@
 package com.zerobase.account.controller;
 
+import com.zerobase.account.aop.AccountLock;
 import com.zerobase.account.dto.CancelBalance;
 import com.zerobase.account.dto.QueryTransactionResponse;
 import com.zerobase.account.dto.UseBalance;
@@ -23,7 +24,8 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping("/transaction/use")
-    public UseBalance.Response useBalance(@RequestBody @Valid UseBalance.Request request) {
+    @AccountLock
+    public UseBalance.Response useBalance(@RequestBody @Valid UseBalance.Request request) throws InterruptedException {
         try {
             return UseBalance.Response
                     .from(transactionService.useBalance(request.getUserId(),
@@ -42,6 +44,7 @@ public class TransactionController {
     }
 
     @PostMapping("/transaction/cancel")
+    @AccountLock
     public CancelBalance.Response cancelBalance(@RequestBody @Valid CancelBalance.Request request) {
         try {
             return CancelBalance.Response

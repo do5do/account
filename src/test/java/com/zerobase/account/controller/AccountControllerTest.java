@@ -6,7 +6,6 @@ import com.zerobase.account.dto.CreateAccount;
 import com.zerobase.account.dto.DeleteAccount;
 import com.zerobase.account.exception.AccountException;
 import com.zerobase.account.service.AccountService;
-import com.zerobase.account.service.RedisTestService;
 import com.zerobase.account.type.ErrorCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ class AccountControllerTest {
     // AccountController가 의존하는 객체를 가짜 객체로 생성하여 자동 주입
     @MockBean
     AccountService accountService;
-
-    @MockBean
-    RedisTestService redisTestService;
 
     @Autowired
     MockMvc mockMvc;
