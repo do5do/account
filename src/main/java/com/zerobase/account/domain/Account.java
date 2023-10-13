@@ -4,10 +4,10 @@ import com.zerobase.account.exception.AccountException;
 import com.zerobase.account.type.AccountStatus;
 import com.zerobase.account.type.ErrorCode;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Account { // 계좌
+public class Account extends BaseTimeEntity { // 계좌
     @Id
     @GeneratedValue
     private Long id;
@@ -36,12 +35,6 @@ public class Account { // 계좌
 
     private LocalDateTime registeredAt; // 계좌 등록 일시
     private LocalDateTime unRegisteredAt; // 계좌 해지 일시
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     public void changeAccountForDelete() {
         this.accountStatus = AccountStatus.UNREGISTERED;
