@@ -42,14 +42,14 @@ public class TransactionService {
 
         Account account = getAccount(accountNumber);
 
-        validUseBalance(accountUser, account, amount);
+        validateUseBalance(accountUser, account, amount);
 
         account.useBalance(amount);
 
         return TransactionDto.fromEntity(saveAndGetTransaction(USE, S, amount, account));
     }
 
-    private void validUseBalance(AccountUser accountUser, Account account, Long amount) {
+    private void validateUseBalance(AccountUser accountUser, Account account, Long amount) {
         if (!Objects.equals(accountUser.getId(), account.getAccountUser().getId())) {
             throw new AccountException(USER_ACCOUNT_UN_MATCH);
         }
@@ -67,22 +67,6 @@ public class TransactionService {
     public void saveFailedUseTransaction(String accountNumber, Long amount) {
         Account account = getAccount(accountNumber);
         saveAndGetTransaction(USE, F, amount, account);
-    }
-
-    private Transaction saveAndGetTransaction(TransactionType transactionType,
-                                              TransactionResultType transactionResultType,
-                                              Long amount,
-                                              Account account) {
-        return transactionRepository.save(Transaction.builder()
-                .transactionType(transactionType)
-                .transactionResultType(transactionResultType)
-                .account(account)
-                .amount(amount)
-                .balanceSnapshot(account.getBalance())
-                // UUID는 중간에 데쉬가 두개 들어가는데 이를 제거하여 많이 사용함
-                .transactionId(UUID.randomUUID().toString().replace("-", ""))
-                .transactedAt(LocalDateTime.now())
-                .build());
     }
 
     @Transactional
@@ -122,7 +106,23 @@ public class TransactionService {
     public TransactionDto queryTransaction(String transactionId) {
         return TransactionDto.fromEntity(
                 transactionRepository.findByTransactionId(transactionId)
-                .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND)));
+                        .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND)));
+    }
+
+    private Transaction saveAndGetTransaction(TransactionType transactionType,
+                                              TransactionResultType transactionResultType,
+                                              Long amount,
+                                              Account account) {
+        return transactionRepository.save(Transaction.builder()
+                .transactionType(transactionType)
+                .transactionResultType(transactionResultType)
+                .account(account)
+                .amount(amount)
+                .balanceSnapshot(account.getBalance())
+                // UUID는 중간에 데쉬가 두개 들어가는데 이를 제거하여 많이 사용함
+                .transactionId(UUID.randomUUID().toString().replace("-", ""))
+                .transactedAt(LocalDateTime.now())
+                .build());
     }
 
     private Account getAccount(String accountNumber) {
