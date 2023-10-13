@@ -40,8 +40,7 @@ public class TransactionService {
         AccountUser accountUser = accountUserRepository.findById(userId)
                 .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
 
-        Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+        Account account = getAccount(accountNumber);
 
         validUseBalance(accountUser, account, amount);
 
@@ -66,9 +65,7 @@ public class TransactionService {
 
     @Transactional
     public void saveFailedUseTransaction(String accountNumber, Long amount) {
-        Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
-
+        Account account = getAccount(accountNumber);
         saveAndGetTransaction(USE, F, amount, account);
     }
 
@@ -93,8 +90,7 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findByTransactionId(transactionId)
                 .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND));
 
-        Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+        Account account = getAccount(accountNumber);
 
         validateCancelBalance(transaction, account, amount);
 
@@ -119,9 +115,7 @@ public class TransactionService {
 
     @Transactional
     public void saveFailedCancelTransaction(String accountNumber, Long amount) {
-        Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
-
+        Account account = getAccount(accountNumber);
         saveAndGetTransaction(CANCEL, F, amount, account);
     }
 
@@ -129,5 +123,10 @@ public class TransactionService {
         return TransactionDto.fromEntity(
                 transactionRepository.findByTransactionId(transactionId)
                 .orElseThrow(() -> new AccountException(TRANSACTION_NOT_FOUND)));
+    }
+
+    private Account getAccount(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
     }
 }
