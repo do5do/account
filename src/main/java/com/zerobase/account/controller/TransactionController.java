@@ -25,7 +25,7 @@ public class TransactionController {
 
     @PostMapping("/transaction/use")
     @AccountLock
-    public UseBalance.Response useBalance(@RequestBody @Valid UseBalance.Request request) throws InterruptedException {
+    public UseBalance.Response useBalance(@RequestBody @Valid UseBalance.Request request) {
         try {
             return UseBalance.Response
                     .from(transactionService.useBalance(request.getUserId(),
@@ -34,12 +34,11 @@ public class TransactionController {
         } catch (AccountException e) {
             log.error("Failed to use balance. msg = {}", e.getMessage());
 
-            // 실패 상황 저장
             transactionService.saveFailedUseTransaction(
                     request.getAccountNumber(),
                     request.getAmount());
 
-            throw e; // 다시 exception을 밖으로 던져줌
+            throw e;
         }
     }
 
@@ -54,7 +53,6 @@ public class TransactionController {
         } catch (AccountException e) {
             log.error("Failed to use balance. msg = {}", e.getMessage());
 
-            // 실패 상황 저장
             transactionService.saveFailedCancelTransaction(
                     request.getAccountNumber(),
                     request.getAmount());
