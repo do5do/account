@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-public class AccountUser extends BaseTimeEntity { // 사용자
+public class AccountUser extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;

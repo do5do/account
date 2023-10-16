@@ -16,7 +16,7 @@ spring:
     defer-datasource-initialization: true
     database-platform: H2
     hibernate:
-      ddl-auto: create-drop # 운영에서는 절대 사용 금지!
+      ddl-auto: create-drop
     open-in-view: false
     properties:
       hibernate:

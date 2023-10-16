@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Account extends BaseTimeEntity { // 계좌
+public class Account extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -25,7 +25,7 @@ public class Account extends BaseTimeEntity { // 계좌
     @ManyToOne
     private AccountUser accountUser;
 
-    // 자유도를 위해 타입을 문자열로 함. (0이 앞에 올 수도 있고, - 가 들어갈 수도 있기 때문)
+    @Column(unique = true)
     private String accountNumber;
 
     @Enumerated(EnumType.STRING)

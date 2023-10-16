@@ -31,10 +31,9 @@ public class AccountService {
         AccountUser accountUser = getAccountUser(userId);
         validateCreateAccount(accountUser);
 
-        // 가장 마지막 계좌를 가져와서 해당 계좌 번호에 + 1을해서 계좌번호를 생성
         String newAccountNumber = accountRepository.findFirstByOrderByIdDesc()
                 .map(account -> Integer.parseInt(account.getAccountNumber()) + 1 + "")
-                .orElse("1000000000"); // 없으면 해당 값
+                .orElse("1000000000");
 
         return AccountDto.fromEntity(
                 accountRepository.save(Account.builder()

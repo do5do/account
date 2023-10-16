@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Transaction extends BaseTimeEntity { // 거래
+public class Transaction extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -29,7 +29,7 @@ public class Transaction extends BaseTimeEntity { // 거래
     @ManyToOne
     private Account account;
 
-    private Long amount; // 거래 금액
+    private Long amount;
 
     private Long balanceSnapshot; // 거래 후 계좌 잔액
 
