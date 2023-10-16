@@ -120,6 +120,33 @@ class AccountServiceTest {
     }
 
     @Test
+    @DisplayName("이미 있는 계좌 번호 - 계좌 생성 실패")
+    void createAccountAccountNumberAlreadyExist() {
+        // given
+        AccountUser accountUser = getAccountUser();
+
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.of(accountUser));
+
+        Account account = Account.builder()
+                .accountNumber("1000000012")
+                .build();
+
+        given(accountRepository.findFirstByOrderByIdDesc())
+                .willReturn(Optional.of(account));
+
+        given(accountRepository.findByAccountNumber(any()))
+                .willReturn(Optional.of(account));
+
+        // when
+        AccountException exception = assertThrows(AccountException.class,
+                () -> accountService.createAccount(1L, 1000L));
+
+        // then
+        assertEquals(ErrorCode.ACCOUNT_ALREADY_EXIST, exception.getErrorCode());
+    }
+
+    @Test
     @DisplayName("유저 당 최대 계좌는 10개 - 계좌 생성 실패")
     void createAccountMaxAccountIs10() {
         // given

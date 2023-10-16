@@ -35,6 +35,8 @@ public class AccountService {
                 .map(account -> Integer.parseInt(account.getAccountNumber()) + 1 + "")
                 .orElse("1000000000");
 
+        validateCreateAccountNumber(newAccountNumber);
+
         return AccountDto.fromEntity(
                 accountRepository.save(Account.builder()
                         .accountUser(accountUser)
@@ -43,6 +45,13 @@ public class AccountService {
                         .balance(initialBalance)
                         .registeredAt(LocalDateTime.now())
                         .build()));
+    }
+
+    private void validateCreateAccountNumber(String newAccountNumber) {
+        accountRepository.findByAccountNumber(newAccountNumber)
+                .ifPresent(o -> {
+                    throw new AccountException(ACCOUNT_ALREADY_EXIST);
+                });
     }
 
     private void validateCreateAccount(AccountUser accountUser) {
