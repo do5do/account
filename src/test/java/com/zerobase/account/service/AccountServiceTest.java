@@ -66,9 +66,9 @@ class AccountServiceTest {
         // then
         verify(accountRepository, times(1)).save(captor.capture());
 
-        // willReturn으로 생성한 값만 가지고 있음
+        // willReturn에 명시한 값만 가지고 있음
         assertEquals(1L, accountDto.getUserId());
-        assertEquals("1000000013", captor.getValue().getAccountNumber()); // captor로 캡쳐한 값으로 확인
+        assertEquals("1000000013", captor.getValue().getAccountNumber()); // captor로 캡쳐한 값 확인
     }
 
     @Test
@@ -81,7 +81,7 @@ class AccountServiceTest {
                 .willReturn(Optional.of(accountUser));
 
         given(accountRepository.findFirstByOrderByIdDesc())
-                .willReturn(Optional.empty()); // 아무것도 없을 때
+                .willReturn(Optional.empty());
 
         given(accountRepository.save(any()))
                 .willReturn(Account.builder()
@@ -99,9 +99,8 @@ class AccountServiceTest {
         // then
         verify(accountRepository, times(1)).save(captor.capture());
 
-        // willReturn으로 생성한 값만 가지고 있음
         assertEquals(1L, accountDto.getUserId());
-        assertEquals("1000000000", captor.getValue().getAccountNumber()); // captor로 캡쳐한 값으로 확인
+        assertEquals("1000000000", captor.getValue().getAccountNumber());
     }
 
     @Test

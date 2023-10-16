@@ -48,6 +48,7 @@ class TransactionServiceTest {
     TransactionService transactionService;
 
     @Test
+    @DisplayName("잔액 사용 성공")
     void useBalanceSuccess() {
         // given
         AccountUser accountUser = getAccountUser();
@@ -211,6 +212,7 @@ class TransactionServiceTest {
     }
 
     @Test
+    @DisplayName("잔액 사용 취소 성공")
     void cancelBalanceSuccess() {
         // given
         AccountUser accountUser = getAccountUser();
@@ -355,6 +357,7 @@ class TransactionServiceTest {
     }
 
     @Test
+    @DisplayName("거래 조회")
     void queryTransaction() {
         // given
         AccountUser accountUser = getAccountUser();
