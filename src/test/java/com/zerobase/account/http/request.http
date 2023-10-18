@@ -1,0 +1,104 @@
+### create account
+POST http://localhost:8080/account
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "initialBalance": 10000
+}
+
+<> 2023-10-13T111442.200.json
+<> 2023-10-13T111322.200.json
+<> 2023-10-13T111128.200.json
+<> 2023-10-13T111047.200.json
+<> 2023-10-13T110943.200.json
+<> 2023-10-13T110753.200.json
+<> 2023-10-13T110307.200.json
+<> 2023-10-13T105856.200.json
+<> 2023-10-13T005425.200.json
+<> 2023-10-13T005244.200.json
+<> 2023-10-13T004801.200.json
+<> 2023-10-12T233000.200.json
+<> 2023-10-11T230523.200.json
+
+### delete account
+DELETE http://localhost:8080/account
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "accountNumber": "1000000000"
+}
+
+<> 2023-10-13T014424.200.json
+
+### get accounts
+GET http://localhost:8080/account?user_id=1
+Content-Type: application/json
+
+<> 2023-10-13T014346.200.json
+<> 2023-10-11T000612.200.json
+
+### use balance
+POST http://localhost:8080/transaction/use
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "accountNumber": "1000000000",
+  "amount": 1000
+}
+
+<> 2023-10-13T111453.200.json
+<> 2023-10-13T111332.200.json
+<> 2023-10-13T111139.200.json
+<> 2023-10-13T111052.200.json
+
+### use balance2
+POST http://localhost:8080/transaction/use
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "accountNumber": "1000000000",
+  "amount": 1000
+}
+
+<> 2023-10-13T111451.200.json
+<> 2023-10-13T111333.200.json
+<> 2023-10-13T111140.200.json
+<> 2023-10-13T111053.200.json
+<> 2023-10-13T110950-1.200.json
+<> 2023-10-13T110950.200.json
+<> 2023-10-13T110949.200.json
+<> 2023-10-13T110804.200.json
+<> 2023-10-13T110630.200.json
+<> 2023-10-13T110049.200.json
+<> 2023-10-13T014935.200.json
+<> 2023-10-13T014725.200.json
+<> 2023-10-13T014713.200.json
+<> 2023-10-13T005431.200.json
+<> 2023-10-13T005252.200.json
+<> 2023-10-13T004825.200.json
+<> 2023-10-12T233030.200.json
+<> 2023-10-11T230637.500.json
+<> 2023-10-11T230532.200.json
+
+### cancel balance
+POST http://localhost:8080/transaction/cancel
+Content-Type: application/json
+
+{
+  "transactionId": "a9d4e26b9e2d4c46b28423f6549fb9de",
+  "accountNumber": "1000000000",
+  "amount": 1500
+}
+
+<> 2023-10-13T005524.200.json
+<> 2023-10-13T004957.200.json
+<> 2023-10-13T004947.200.json
+<> 2023-10-13T004912.500.json
+<> 2023-10-12T233108.200.json
+
+### query transaction
+GET http://localhost:8080/transaction/45dc088fa782417eb3068f2ada83fb96
