@@ -117,7 +117,8 @@ class AccountControllerTest {
     }
 
     private static List<AccountDto> getAccountDtos() {
-        return List.of(AccountDto.builder().balance(10L)
+        return List.of(
+                AccountDto.builder().balance(10L)
                         .accountNumber("1000000011").build(),
                 AccountDto.builder().balance(100L)
                         .accountNumber("1000000151").build(),
