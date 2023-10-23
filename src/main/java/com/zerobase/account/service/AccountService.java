@@ -25,8 +25,8 @@ import static com.zerobase.account.type.ErrorCode.*;
 public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountUserRepository accountUserRepository;
-    private final String DEFAULT_ACCOUNT_NUMBER = "1000000000";
-    private final int MAX_ACCOUNT_SIZE = 10;
+    private static final String DEFAULT_ACCOUNT_NUMBER = "1000000000";
+    private static final int MAX_ACCOUNT_SIZE = 10;
 
     @Transactional
     public AccountDto createAccount(Long userId, Long initialBalance) {
@@ -34,7 +34,7 @@ public class AccountService {
         validateCreateAccount(accountUser);
 
         String newAccountNumber = accountRepository.findFirstByOrderByIdDesc()
-                .map(account -> Integer.parseInt(account.getAccountNumber()) + 1 + "")
+                .map(account -> String.valueOf(Integer.parseInt(account.getAccountNumber()) + 1))
                 .orElse(DEFAULT_ACCOUNT_NUMBER);
 
         validateCreateAccountNumber(newAccountNumber);

@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public class AccountException extends RuntimeException {
-    private ErrorCode errorCode;
-    private String errorMessage;
+    private final ErrorCode errorCode;
+    private final String errorMessage;
 
     public AccountException(ErrorCode errorCode) {
         super(errorCode.getDescription());
